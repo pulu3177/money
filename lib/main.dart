@@ -5,7 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:core';
 import 'dart:math';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:intl/intl.dart';
 
@@ -38,7 +37,15 @@ var data = {
   '交通': 0.0,
   '娛樂': 0.0,
   '電話': 0.0,
-  '交際': 0.0
+  '交際': 0.0,
+
+  '飲食1': 0.0,
+  '服飾1': 0.0,
+  '居家1': 0.0,
+  '交通1': 0.0,
+  '娛樂1': 0.0,
+  '電話1': 0.0,
+  '交際1': 0.0,
 };
 
 int ran() {
@@ -224,8 +231,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       index = 0;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Information()));
-    } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
     }
   }
 
@@ -459,84 +464,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 }
 
-class Information extends StatefulWidget {
-  @override
-  _InformationState createState() => _InformationState();
-}
-
-class _InformationState extends State<Information> {
-  var index = 2;
-  bool toggle = false;
-
-  Map<String, double> dataMap = Map();
-  List<Color> colorList = [
-    Colors.red,
-    Colors.orange,
-    Colors.yellow,
-    Colors.green,
-    Colors.blue,
-    Colors.purple,
-    Colors.white70
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    dataMap.putIfAbsent("飲食", () => data['飲食']);
-    dataMap.putIfAbsent("服飾", () => data['服飾']);
-    dataMap.putIfAbsent("居家", () => data['居家']);
-    dataMap.putIfAbsent("交通", () => data['交通']);
-    dataMap.putIfAbsent("娛樂", () => data['娛樂']);
-    dataMap.putIfAbsent("電話", () => data['電話']);
-    dataMap.putIfAbsent("交際", () => data['交際']);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("資料分析"),
-      ),
-      body: Container(
-        child: Center(
-          child: toggle
-              ? PieChart(
-                  dataMap: dataMap,
-                  animationDuration: Duration(milliseconds: 800),
-                  chartLegendSpacing: 32.0,
-                  chartRadius: MediaQuery.of(context).size.width / 2.7,
-                  showChartValuesInPercentage: true,
-                  showChartValues: true,
-                  showChartValuesOutside: false,
-                  chartValueBackgroundColor: Colors.grey[200],
-                  colorList: colorList,
-                  showLegends: true,
-                  legendPosition: LegendPosition.right,
-                  decimalPlaces: 1,
-                  showChartValueLabel: true,
-                  initialAngle: 0,
-                  chartValueStyle: defaultChartValueStyle.copyWith(
-                    color: Colors.blueGrey[900].withOpacity(0.9),
-                  ),
-                  chartType: ChartType.disc,
-                )
-              : Text("Press FAB to show chart"),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: togglePieChart,
-        child: Icon(Icons.insert_chart),
-      ),
-    );
-  }
-
-  void togglePieChart() {
-    setState(() {
-      toggle = !toggle;
-    });
-  }
-}
-
 class FirstScreen extends StatefulWidget {
   FirstScreen({Key key}) : super(key: key);
 
@@ -737,7 +664,6 @@ class _FirstScreenState extends State<FirstScreen> {
             onChanged: (Item value) {
               setState(() {
                 hit2 = value.name;
-
                 selectedUser = value;
                 print(hit2);
               });
@@ -786,31 +712,55 @@ class _FirstScreenState extends State<FirstScreen> {
                 if (hit1 == '支出') {
                   data['支出'] += int.parse(_controller.text);
                   print(data['支出']);
+                  if (hit2 == '飲食1') {
+                    print(data['飲食1']);
+                    data['飲食1'] += int.parse(_controller.text);
+                    print(data['飲食1']);
+                  } else if (hit2 == '服飾1') {
+                    data['服飾1'] += int.parse(_controller.text);
+                    print(data['服飾1']);
+                  } else if (hit2 == '居家1') {
+                    data['居家1'] += int.parse(_controller.text);
+                    print(data['居家1']);
+                  } else if (hit2 == '交通1') {
+                    data['交通1'] += int.parse(_controller.text);
+                    print(data['交通1']);
+                  } else if (hit2 == '娛樂1') {
+                    data['娛樂1'] += int.parse(_controller.text);
+                    print(data['娛樂1']);
+                  } else if (hit2 == '電話1') {
+                    data['電話1'] += int.parse(_controller.text);
+                    print(data['電話1']);
+                  } else if (hit2 == '交際1') {
+                    data['交際1'] += int.parse(_controller.text);
+                    print(data['交際1']);
+                  }
                 } else if (hit1 == '收入') {
                   data['收入'] += int.parse(_controller.text);
                   print(data['收入']);
-                } else if (hit2 == '飲食') {
-                  print(data['飲食']);
-                  data['飲食'] += int.parse(_controller.text);
-                  print(data['飲食']);
-                } else if (hit2 == '服飾') {
-                  data['服飾'] += int.parse(_controller.text);
-                  print(data['服飾']);
-                } else if (hit2 == '居家') {
-                  data['居家'] += int.parse(_controller.text);
-                  print(data['居家']);
-                } else if (hit2 == '交通') {
-                  data['交通'] += int.parse(_controller.text);
-                  print(data['交通']);
-                } else if (hit2 == '娛樂') {
-                  data['娛樂'] += int.parse(_controller.text);
-                  print(data['娛樂']);
-                } else if (hit2 == '電話') {
-                  data['電話'] += int.parse(_controller.text);
-                  print(data['電話']);
-                } else if (hit2 == '交際') {
-                  data['交際'] += int.parse(_controller.text);
-                  print(data['交際']);
+                  if (hit2 == '飲食') {
+                    print(data['飲食']);
+                    data['飲食'] += int.parse(_controller.text);
+                    print(data['飲食']);
+                  } else if (hit2 == '服飾') {
+                    data['服飾'] += int.parse(_controller.text);
+                    print(data['服飾']);
+                  } else if (hit2 == '居家') {
+                    data['居家'] += int.parse(_controller.text);
+                    print(data['居家']);
+                  } else if (hit2 == '交通') {
+                    data['交通'] += int.parse(_controller.text);
+                    print(data['交通']);
+                  } else if (hit2 == '娛樂') {
+                    data['娛樂'] += int.parse(_controller.text);
+                    print(data['娛樂']);
+                  } else if (hit2 == '電話') {
+                    data['電話'] += int.parse(_controller.text);
+                    print(data['電話']);
+                  } else if (hit2 == '交際') {
+                    data['交際'] += int.parse(_controller.text);
+                    print(data['交際']);
+                  }
                 }
                 Navigator.of(context).pop();
                 // await prefs.setInt('服飾', int.parse(_controller.text));
@@ -837,6 +787,87 @@ class _FirstScreenState extends State<FirstScreen> {
         ],
       ),
     );
+  }
+}
+
+class Information extends StatefulWidget {
+  @override
+  _InformationState createState() => _InformationState();
+}
+
+class _InformationState extends State<Information> {
+  var index = 2;
+  bool toggle = false;
+
+  Map<String, double> dataMap = Map();
+  List<Color> colorList = [
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.purple,
+    Colors.white70
+  ];
+
+  @override
+  void initState() {
+    double n = data['飲食'];
+    print(n);
+    super.initState();
+    dataMap.putIfAbsent("飲食", () => data['飲食']);
+    dataMap.putIfAbsent("服飾", () => data['服飾']);
+    dataMap.putIfAbsent("居家", () => data['居家']);
+    dataMap.putIfAbsent("交通", () => data['交通']);
+    dataMap.putIfAbsent("娛樂", () => data['娛樂']);
+    dataMap.putIfAbsent("電話", () => data['電話']);
+    dataMap.putIfAbsent("交際", () => data['交際']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("資料分析"),
+      ),
+      body: Container(
+        child: Center(
+          child: toggle
+              ? PieChart(
+                  dataMap: dataMap,
+                  animationDuration: Duration(milliseconds: 800),
+                  chartLegendSpacing: 32.0,
+                  chartRadius: MediaQuery.of(context).size.width / 2.7,
+                  showChartValuesInPercentage: true,
+                  showChartValues: true,
+                  showChartValuesOutside: false,
+                  chartValueBackgroundColor: Colors.grey[200],
+                  colorList: colorList,
+                  showLegends: true,
+                  legendPosition: LegendPosition.right,
+                  decimalPlaces: 1,
+                  showChartValueLabel: true,
+                  initialAngle: 0,
+                  chartValueStyle: defaultChartValueStyle.copyWith(
+                    color: Colors.blueGrey[900].withOpacity(0.9),
+                  ),
+                  chartType: ChartType.disc,
+                )
+              : Text("Press FAB to show chart"),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: togglePieChart,
+        child: Icon(Icons.insert_chart),
+      ),
+    );
+  }
+
+  void togglePieChart() {
+    print(data['飲食']);
+    setState(() {
+      toggle = !toggle;
+    });
   }
 }
 
