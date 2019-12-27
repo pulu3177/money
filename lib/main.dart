@@ -4,9 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:core';
+import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'dart:math';
+import 'package:intl/intl.dart';
 
 Future<String> loadAsset() async {
   return await rootBundle.loadString('assets/config.json');
@@ -28,6 +29,7 @@ void main() {
 
 var data = {
   //格式  Key: Value
+  '剩餘': ran().toDouble(),
   '支出': 0.0,
   '收入': 0.0,
   '飲食': 0.0,
@@ -38,6 +40,13 @@ var data = {
   '電話': 0.0,
   '交際': 0.0
 };
+
+int ran() {
+  Random random = Random();
+  int randomNumber = random.nextInt(1500) + 4500;
+  print(randomNumber);
+  return randomNumber;
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -80,59 +89,65 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    var today = {
+      '支出': 0.0,
+      '收入': 0.0,
+      '飲食': 0.0,
+      '服飾': 0.0,
+      '居家': 0.0,
+      '交通': 0.0,
+      '娛樂': 0.0,
+      '電話': 0.0,
+      '交際': 0.0
+    };
     final _selectedDay = DateTime.now();
-
     _events = {
       _selectedDay.subtract(Duration(days: 30)): [
-        'Event A0',
-        'Event B0',
-        'Event C0'
+        'Cost A0',
+        'Cost B0',
+        'Cost C0'
       ],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
+      _selectedDay.subtract(Duration(days: 27)): ['Cost A1'],
       _selectedDay.subtract(Duration(days: 20)): [
-        'Event A2',
-        'Event B2',
-        'Event C2',
-        'Event D2'
+        'Cost A2',
+        'Cost B2',
+        'Cost C2',
+        'Cost D2'
       ],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
+      _selectedDay.subtract(Duration(days: 16)): ['Cost A3', 'Cost B3'],
       _selectedDay.subtract(Duration(days: 10)): [
-        'Event A4',
-        'Event B4',
-        'Event C4'
+        'Cost A4',
+        'Cost B4',
+        'Cost C4'
       ],
       _selectedDay.subtract(Duration(days: 4)): [
-        'Event A5',
-        'Event B5',
-        'Event C5'
+        'Cost A5',
+        'Cost B5',
+        'Cost C5'
       ],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
+      _selectedDay.subtract(Duration(days: 2)): ['Cost A6', 'Cost B6'],
+      _selectedDay: ['Cost A7', 'Cost B7', 'Cost C7', 'Cost D7'],
       _selectedDay.add(Duration(days: 1)): [
-        'Event A8',
-        'Event B8',
-        'Event C8',
-        'Event D8'
+        'Cost A8',
+        'Cost B8',
+        'Cost C8',
+        'Cost D8'
       ],
       _selectedDay.add(Duration(days: 3)):
-          Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): [
-        'Event A10',
-        'Event B10',
-        'Event C10'
-      ],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
+          Set.from(['Cost A9', 'Cost A9', 'Cost B9']).toList(),
+      _selectedDay.add(Duration(days: 7)): ['Cost A10', 'Cost B10', 'Cost C10'],
+      _selectedDay.add(Duration(days: 11)): ['Cost A11', 'Cost B11'],
       _selectedDay.add(Duration(days: 17)): [
-        'Event A12',
-        'Event B12',
-        'Event C12',
-        'Event D12'
+        'Cost A12',
+        'Cost B12',
+        'Cost C12',
+        'Cost D12'
       ],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
+      _selectedDay.add(Duration(days: 22)): ['Cost A13', 'Cost B13'],
       _selectedDay.add(Duration(days: 26)): [
-        'Event A14',
-        'Event B14',
-        'Event C14'
+        'Cost A14',
+        'Cost B14',
+        'Cost C14'
       ],
     };
     _selectedEvents = _events[_selectedDay] ?? [];
@@ -165,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   int _selectedIndex = 0;
-  final pages = [MyHomePage(), Information()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,6 +220,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _selectedIndex = index;
     });
+    if (index != 0) {
+      index = 0;
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Information()));
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+    }
   }
 
   // Simple TableCalendar configuration (using Styles)
@@ -359,19 +381,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget _buildButtons() {
     /*final dateTime = _events.keys.elementAt(_events.length - 2);*/
-
+    double left = data['剩餘'] - data['支出'] + data['收入'];
     return Column(
       children: <Widget>[
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            Text('今日 👉 '),
             Text('收入: '),
-            Text(data['收入'].toString()),
-            Text('    '),
-            Text('支出: '),
-            Text(data['支出'].toString()),
-            Text('                                '),
+            Text(data['收入'].toInt().toString()),
+            Text(',  支出: '),
+            Text(data['支出'].toInt().toString()),
+            Text(' 剩餘金額: '),
+            Text(left.toInt().toString()),
+            Text('   '),
             RaisedButton(
               child: Text('+'),
               onPressed: () {
@@ -483,7 +507,7 @@ class _InformationState extends State<Information> {
                   chartRadius: MediaQuery.of(context).size.width / 2.7,
                   showChartValuesInPercentage: true,
                   showChartValues: true,
-                  showChartValuesOutside: true,
+                  showChartValuesOutside: false,
                   chartValueBackgroundColor: Colors.grey[200],
                   colorList: colorList,
                   showLegends: true,
@@ -648,11 +672,12 @@ class _FirstScreenState extends State<FirstScreen> {
     ];
     var selectedUser;
     var selectedUser2;
-
+    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return Scaffold(
       appBar: AppBar(
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back, color: Colors.white),
+        title: Text(formattedDate),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         //title: Text('${date.day}'),
