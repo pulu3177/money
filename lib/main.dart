@@ -812,9 +812,9 @@ class _InformationState extends State<Information> {
 
   @override
   void initState() {
+    super.initState();
     double n = data['飲食'];
     print(n);
-    super.initState();
     dataMap.putIfAbsent("飲食", () => data['飲食']);
     dataMap.putIfAbsent("服飾", () => data['服飾']);
     dataMap.putIfAbsent("居家", () => data['居家']);
