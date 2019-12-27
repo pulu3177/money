@@ -709,9 +709,9 @@ class _FirstScreenState extends State<FirstScreen> {
               if (hit1 == '收入或支出' || hit2 == '選擇類別') {
                 showAlert1(context);
               } else {
-                if (hit1 == '支出') {
-                  data['支出'] += int.parse(_controller.text);
-                  print(data['支出']);
+                if (hit1 == '收入') {
+                  data['收入'] += int.parse(_controller.text);
+                  print(data['收入']);
                   if (hit2 == '飲食1') {
                     print(data['飲食1']);
                     data['飲食1'] += int.parse(_controller.text);
@@ -735,9 +735,9 @@ class _FirstScreenState extends State<FirstScreen> {
                     data['交際1'] += int.parse(_controller.text);
                     print(data['交際1']);
                   }
-                } else if (hit1 == '收入') {
-                  data['收入'] += int.parse(_controller.text);
-                  print(data['收入']);
+                } else if (hit1 == '支出') {
+                  data['支出'] += int.parse(_controller.text);
+                  print(data['支出']);
                   if (hit2 == '飲食') {
                     print(data['飲食']);
                     data['飲食'] += int.parse(_controller.text);
